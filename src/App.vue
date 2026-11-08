@@ -5,6 +5,7 @@ import LessonList from './components/LessonList.vue'
 import LessonForm from './components/LessonForm.vue'
 import StatsPanel from './components/StatsPanel.vue'
 import TypeSettings from './components/TypeSettings.vue'
+import DataBackup from './components/DataBackup.vue'
 
 const activeTab = ref('lessons')
 const isFormOpen = ref(false)
@@ -27,7 +28,10 @@ const tabs = [
     <main class="app__content">
       <LessonList v-if="activeTab === 'lessons'" />
       <StatsPanel v-else-if="activeTab === 'stats'" />
-      <TypeSettings v-else-if="activeTab === 'settings'" />
+      <div v-else-if="activeTab === 'settings'" class="app__settings">
+        <TypeSettings />
+        <DataBackup />
+      </div>
     </main>
 
     <Transition name="sheet">
@@ -100,4 +104,6 @@ const tabs = [
 .sheet-leave-to {
   opacity: 0;
 }
+
+.app__settings { display: flex; flex-direction: column; gap: 2rem; }
 </style>

@@ -32,7 +32,7 @@ function setMinutes(value) {
 
 <template>
   <div class="duration-picker">
-    <span class="duration-picker__label">{{ label }}</span>
+    <span v-if="label" class="duration-picker__label">{{ label }}</span>
     <div class="duration-picker__row">
       <BaseSelect
         :model-value="String(current.hours)"

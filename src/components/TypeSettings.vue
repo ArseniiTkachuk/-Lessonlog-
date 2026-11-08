@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import BaseInput from './BaseInput.vue'
 import BaseButton from './BaseButton.vue'
+import DurationPicker from './DurationPicker.vue'
 import { useLessonTypes } from '../composables/useLessonTypes.js'
 
 const { types, addType, updateType, removeType } = useLessonTypes()
@@ -17,24 +18,38 @@ function submitNewType() {
 
 <template>
   <div class="type-settings">
-    <h2>Типи уроків і ціни</h2>
+    <h2>Типи уроків, ціни й тривалість</h2>
 
     <ul class="type-settings__list">
       <li v-for="type in types" :key="type.id" class="type-settings__row">
-        <span class="type-settings__name">{{ type.name }}</span>
-        <div class="type-settings__price">
-          <input
-            class="type-settings__price-input"
-            type="number"
-            min="0"
-            :value="type.price"
-            @input="updateType(type.id, { price: $event.target.value })"
-          />
-          <span class="type-settings__unit">₴/урок</span>
+        <div class="type-settings__top">
+          <span class="type-settings__name">{{ type.name }}</span>
+          <button class="type-settings__remove" aria-label="Видалити тип" @click="removeType(type.id)">
+            ✕
+          </button>
         </div>
-        <button class="type-settings__remove" aria-label="Видалити тип" @click="removeType(type.id)">
-          ✕
-        </button>
+
+        <div class="type-settings__fields">
+          <label class="type-settings__price">
+            <span class="type-settings__label">Ціна</span>
+            <span class="type-settings__price-wrap">
+              <input
+                  class="type-settings__price-input"
+                  type="number"
+                  min="0"
+                  :value="type.price"
+                  @input="updateType(type.id, { price: $event.target.value })"
+              />
+              <span class="type-settings__unit">₴/урок</span>
+            </span>
+          </label>
+
+          <DurationPicker
+              :model-value="type.duration"
+              label="Тривалість за замовчуванням"
+              @update:model-value="updateType(type.id, { duration: $event })"
+          />
+        </div>
       </li>
     </ul>
 
@@ -64,9 +79,9 @@ function submitNewType() {
 
 .type-settings__row {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 0.75rem;
-  padding: 0.75rem 1rem;
+  padding: 0.85rem 1rem;
   border-bottom: 1px solid var(--color-border);
 }
 
@@ -74,12 +89,35 @@ function submitNewType() {
   border-bottom: none;
 }
 
+.type-settings__top {
+  display: flex;
+  align-items: center;
+}
+
 .type-settings__name {
   flex: 1;
   font-weight: 500;
 }
 
+.type-settings__fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
 .type-settings__price {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.type-settings__label {
+  font-size: 0.85rem;
+  color: var(--color-ink-soft);
+}
+
+.type-settings__price-wrap {
   display: flex;
   align-items: center;
   gap: 0.4rem;
@@ -87,10 +125,11 @@ function submitNewType() {
 
 .type-settings__price-input {
   width: 4.5rem;
-  padding: 0.4rem 0.5rem;
+  padding: 0.6rem 0.5rem;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   font-family: var(--font-body);
+  font-size: 1rem;
   text-align: right;
 }
 

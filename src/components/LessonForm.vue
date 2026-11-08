@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import BaseInput from './BaseInput.vue'
 import BaseSelect from './BaseSelect.vue'
 import BaseButton from './BaseButton.vue'
@@ -9,19 +9,27 @@ import { useLessons } from '../composables/useLessons.js'
 
 const emit = defineEmits(['close'])
 
-const { types } = useLessonTypes()
-const { addLesson, todayISO } = useLessons()
+const { types, getTypeById } = useLessonTypes()
+const { addLessons, todayISO } = useLessons()
 
 const date = ref(todayISO())
 const typeId = ref(types.value[0]?.id ?? '')
-const hours = ref(1)
+const hours = ref(getTypeById(typeId.value)?.duration ?? 1)
+const count = ref('1')
 const note = ref('')
+
+// При виборі типу підставляємо його тривалість із налаштувань
+watch(typeId, (id) => {
+  const type = getTypeById(id)
+  if (type) hours.value = type.duration
+})
 
 const typeOptions = () => types.value.map((t) => ({ value: t.id, label: t.name }))
 
 function submit() {
   if (!typeId.value || !hours.value) return
-  addLesson({ date: date.value, typeId: typeId.value, hours: hours.value, note: note.value })
+  const n = Math.min(20, Math.max(1, Math.floor(Number(count.value)) || 1))
+  addLessons({ date: date.value, typeId: typeId.value, hours: hours.value, note: note.value }, n)
   emit('close')
 }
 </script>
@@ -36,12 +44,13 @@ function submit() {
     <form class="form-sheet__body" @submit.prevent="submit">
       <BaseInput v-model="date" type="date" label="Дата" />
       <BaseSelect v-model="typeId" label="Тип уроку" :options="typeOptions()" />
-      <DurationPicker v-model="hours" label="Тривалість" />
+      <DurationPicker v-model="hours" label="Тривалість кожного уроку" />
+      <BaseInput v-model="count" type="number" min="1" step="1" label="Кількість уроків" />
       <BaseInput v-model="note" label="Нотатка (необов'язково)" placeholder="Напр. ім'я учня" />
 
       <div class="form-sheet__actions">
         <BaseButton variant="ghost" type="button" @click="$emit('close')">Скасувати</BaseButton>
-        <BaseButton variant="primary" type="submit">Додати урок</BaseButton>
+        <BaseButton variant="primary" type="submit">Додати</BaseButton>
       </div>
     </form>
   </div>

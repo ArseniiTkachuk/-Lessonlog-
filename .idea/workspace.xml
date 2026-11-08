@@ -4,11 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="657d4f0e-c072-41a5-afff-456c10ba0728" name="Changes" comment="" />
+    <list default="true" id="657d4f0e-c072-41a5-afff-456c10ba0728" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/components/DataBackup.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/backup.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/DurationPicker.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DurationPicker.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/LessonForm.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/LessonForm.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/TypeSettings.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TypeSettings.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/composables/useLessonTypes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/composables/useLessonTypes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/composables/useLessons.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/composables/useLessons.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/vite.config.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="McpProjectServerCommands">
     <commands />
@@ -78,6 +92,9 @@
   &quot;fromUser&quot;: false
 }</component>
   <component name="ProjectId" id="3Lpf8i3EfizPXlaFm3BvwcA6pNj" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -89,16 +106,25 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "main",
+    "javascript.preferred.runtime.type.id": "node",
     "last_opened_file_path": "/home/user/WebstormProjects/lessonlog",
     "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "npm.dev.executor": "Run",
     "ts.external.directory.path": "/home/user/.local/share/JetBrains/Toolbox/apps/webstorm/plugins/javascript-plugin/jsLanguageServicesImpl/external"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/utils" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="dev" type="js.build_tools.npm" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
@@ -126,7 +152,7 @@
       <option name="presentableId" value="Default" />
       <updated>1794155772743</updated>
       <workItem from="1794155774996" duration="64000" />
-      <workItem from="1794155876462" duration="4033000" />
+      <workItem from="1794155876462" duration="5642000" />
     </task>
     <servers />
   </component>

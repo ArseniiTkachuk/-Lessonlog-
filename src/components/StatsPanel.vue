@@ -5,12 +5,13 @@ import ChartPanel from './ChartPanel.vue'
 import { useLessons } from '../composables/useLessons.js'
 import { useLessonTypes } from '../composables/useLessonTypes.js'
 import { formatDuration } from '../utils/duration.js'
+import { monthKey } from '../utils/date.js'
 
-const { lessons } = useLessons()
+const { lessons, lessonPrice } = useLessons()
 const { types } = useLessonTypes()
 
 function currentMonthKey() {
-  return new Date().toISOString().slice(0, 7) // YYYY-MM
+  return monthKey() // YYYY-MM за локальним часом
 }
 
 const selectedMonth = ref(currentMonthKey())
@@ -19,30 +20,30 @@ const monthOptions = computed(() => {
   const keys = new Set(lessons.value.map((l) => l.date.slice(0, 7)))
   keys.add(currentMonthKey())
   return [...keys]
-    .sort()
-    .reverse()
-    .map((key) => {
-      const [y, m] = key.split('-')
-      const label = new Date(`${key}-01`).toLocaleDateString('uk-UA', {
-        month: 'long',
-        year: 'numeric',
+      .sort()
+      .reverse()
+      .map((key) => {
+        const [y, m] = key.split('-')
+        const label = new Date(`${key}-01T00:00:00`).toLocaleDateString('uk-UA', {
+          month: 'long',
+          year: 'numeric',
+        })
+        return { value: key, label: label.charAt(0).toUpperCase() + label.slice(1) }
       })
-      return { value: key, label: label.charAt(0).toUpperCase() + label.slice(1) }
-    })
 })
 
 const lessonsInMonth = computed(() =>
-  lessons.value.filter((l) => l.date.startsWith(selectedMonth.value))
+    lessons.value.filter((l) => l.date.startsWith(selectedMonth.value))
 )
 
 const statsByType = computed(() =>
-  types.value.map((type) => {
-    const typeLessons = lessonsInMonth.value.filter((l) => l.typeId === type.id)
-    const hours = typeLessons.reduce((sum, l) => sum + Number(l.hours), 0)
-    const count = typeLessons.length
-    const earnings = count * (Number(type.price) || 0)
-    return { ...type, hours, count, earnings }
-  })
+    types.value.map((type) => {
+      const typeLessons = lessonsInMonth.value.filter((l) => l.typeId === type.id)
+      const hours = typeLessons.reduce((sum, l) => sum + Number(l.hours), 0)
+      const count = typeLessons.length
+      const earnings = typeLessons.reduce((sum, l) => sum + lessonPrice(l), 0)
+      return { ...type, hours, count, earnings }
+    })
 )
 
 const totalHours = computed(() => statsByType.value.reduce((sum, t) => sum + t.hours, 0))
@@ -65,7 +66,7 @@ const totalEarnings = computed(() => statsByType.value.reduce((sum, t) => sum + 
             <dt>Час</dt>
             <dd>{{ formatDuration(type.hours) }}</dd>
           </div>
-          <div class="stats__row" v-if="type.price">
+          <div class="stats__row" v-if="type.earnings">
             <dt>Заробіток</dt>
             <dd>{{ type.earnings.toFixed(0) }} ₴</dd>
           </div>

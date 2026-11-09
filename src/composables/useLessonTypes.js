@@ -27,6 +27,14 @@ function loadTypes() {
 
 const types = ref(loadTypes())
 
+// Тип, який підставляється у форму нового уроку
+const DEFAULT_KEY = 'lessonlog_default_type'
+const defaultTypeId = ref(localStorage.getItem(DEFAULT_KEY) || 'group')
+
+watch(defaultTypeId, (value) => {
+  localStorage.setItem(DEFAULT_KEY, value)
+})
+
 watch(
     types,
     (value) => {
@@ -54,6 +62,15 @@ function getTypeById(id) {
   return types.value.find((t) => t.id === id)
 }
 
+function setDefaultType(id) {
+  defaultTypeId.value = id
+}
+
+/** Тип за замовчуванням; якщо його видалено — перший зі списку. */
+function getDefaultType() {
+  return types.value.find((t) => t.id === defaultTypeId.value) ?? types.value[0]
+}
+
 /** Імпорт: повністю замінює типи. */
 function replaceTypes(list) {
   types.value = normalize(list)
@@ -66,5 +83,16 @@ function mergeTypes(list) {
 }
 
 export function useLessonTypes() {
-  return { types, addType, updateType, removeType, getTypeById, replaceTypes, mergeTypes }
+  return {
+    types,
+    defaultTypeId,
+    addType,
+    updateType,
+    removeType,
+    getTypeById,
+    setDefaultType,
+    getDefaultType,
+    replaceTypes,
+    mergeTypes,
+  }
 }

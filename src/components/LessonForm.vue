@@ -9,12 +9,12 @@ import { useLessons } from '../composables/useLessons.js'
 
 const emit = defineEmits(['close'])
 
-const { types, getTypeById } = useLessonTypes()
+const { types, getTypeById, getDefaultType } = useLessonTypes()
 const { addLessons, todayISO } = useLessons()
 
 const date = ref(todayISO())
-const typeId = ref(types.value[0]?.id ?? '')
-const hours = ref(getTypeById(typeId.value)?.duration ?? 1)
+const typeId = ref(getDefaultType()?.id ?? '')
+const hours = ref(getDefaultType()?.duration ?? 1)
 const count = ref('1')
 const note = ref('')
 
@@ -29,7 +29,16 @@ const typeOptions = () => types.value.map((t) => ({ value: t.id, label: t.name }
 function submit() {
   if (!typeId.value || !hours.value) return
   const n = Math.min(20, Math.max(1, Math.floor(Number(count.value)) || 1))
-  addLessons({ date: date.value, typeId: typeId.value, hours: hours.value, note: note.value }, n)
+  addLessons(
+      {
+        date: date.value,
+        typeId: typeId.value,
+        hours: hours.value,
+        note: note.value,
+        price: getTypeById(typeId.value)?.price ?? 0, // ціна «заморожується» в уроці
+      },
+      n
+  )
   emit('close')
 }
 </script>

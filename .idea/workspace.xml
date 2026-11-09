@@ -5,9 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="657d4f0e-c072-41a5-afff-456c10ba0728" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/utils/date.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/LessonItem.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/LessonItem.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ChartPanel.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ChartPanel.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/LessonForm.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/LessonForm.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/LessonList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/LessonList.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/StatsPanel.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/StatsPanel.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/TypeSettings.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TypeSettings.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/composables/useLessonTypes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/composables/useLessonTypes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/composables/useLessons.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/composables/useLessons.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/backup.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/backup.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -147,7 +154,7 @@
       <updated>1794155772743</updated>
       <workItem from="1794155774996" duration="64000" />
       <workItem from="1794155876462" duration="5642000" />
-      <workItem from="1794219059296" duration="83000" />
+      <workItem from="1794219059296" duration="1268000" />
     </task>
     <servers />
   </component>

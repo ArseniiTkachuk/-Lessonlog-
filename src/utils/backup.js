@@ -39,6 +39,7 @@ export function parseBackup(text) {
             typeId: String(l.typeId),
             hours: Number(l.hours) || 0,
             note: l.note ? String(l.note) : '',
+            ...(l.price !== undefined && l.price !== null ? { price: Number(l.price) || 0 } : {}),
         }))
 
     return { types, lessons }

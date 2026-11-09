@@ -2,11 +2,10 @@
 import { ref, computed } from 'vue'
 import AppTabs from './AppTabs.vue'
 import { useLessons } from '../composables/useLessons.js'
-import { useLessonTypes } from '../composables/useLessonTypes.js'
 import { formatDuration } from '../utils/duration.js'
+import { lastMonthKeys } from '../utils/date.js'
 
-const { lessons } = useLessons()
-const { types } = useLessonTypes()
+const { lessons, lessonPrice } = useLessons()
 
 const metric = ref('earnings') // 'earnings' | 'hours'
 const metricTabs = [
@@ -14,28 +13,15 @@ const metricTabs = [
   { value: 'hours', label: 'Години' },
 ]
 
-/** Останні 6 місяців у хронологічному порядку, включно з поточним. */
-function lastMonthKeys(count = 6) {
-  const keys = []
-  const now = new Date()
-  for (let i = count - 1; i >= 0; i--) {
-    const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
-    keys.push(d.toISOString().slice(0, 7))
-  }
-  return keys
-}
-
 function monthShortLabel(key) {
-  const label = new Date(`${key}-01`).toLocaleDateString('uk-UA', { month: 'short' })
+  const label = new Date(`${key}-01T00:00:00`).toLocaleDateString('uk-UA', { month: 'short' })
   return label.replace('.', '')
 }
 
 const chartData = computed(() => {
-  const priceByType = Object.fromEntries(types.value.map((t) => [t.id, Number(t.price) || 0]))
-
   return lastMonthKeys().map((key) => {
     const monthLessons = lessons.value.filter((l) => l.date.startsWith(key))
-    const earnings = monthLessons.reduce((sum, l) => sum + (priceByType[l.typeId] || 0), 0)
+    const earnings = monthLessons.reduce((sum, l) => sum + lessonPrice(l), 0)
     const hours = monthLessons.reduce((sum, l) => sum + Number(l.hours), 0)
     return { key, label: monthShortLabel(key), earnings, hours }
   })

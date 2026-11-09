@@ -1,12 +1,27 @@
 import { ref, watch } from 'vue'
+import { useLessonTypes } from './useLessonTypes.js'
 
 // ВАЖЛИВО: якщо у вашому старому файлі ключ інший — залиште старий, щоб не втратити дані!
 const STORAGE_KEY = 'lessonlog_lessons'
 
+const { getTypeById } = useLessonTypes()
+
+/**
+ * Одноразова міграція: уроки без ціни «заморожуються» за поточною ціною типу.
+ * Якщо ціна типу 0 (ще не задана), урок лишається без ціни й рахується за ціною типу.
+ */
+function withFrozenPrice(list) {
+  return list.map((l) => {
+    if (l.price !== undefined && l.price !== null) return l
+    const price = Number(getTypeById(l.typeId)?.price) || 0
+    return price > 0 ? { ...l, price } : l
+  })
+}
+
 function loadLessons() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    if (raw) return JSON.parse(raw)
+    if (raw) return withFrozenPrice(JSON.parse(raw))
   } catch (e) {
     console.error('Не вдалося прочитати уроки зі сховища', e)
   }
@@ -14,6 +29,13 @@ function loadLessons() {
 }
 
 const lessons = ref(loadLessons())
+
+// зберегти результат міграції одразу
+try {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(lessons.value))
+} catch (e) {
+  console.error(e)
+}
 
 watch(
     lessons,
@@ -36,11 +58,24 @@ function todayISO() {
 }
 
 /** Додає `count` однакових уроків (кожен — окремий запис зі своїм id). */
-function addLessons({ date, typeId, hours, note = '' }, count = 1) {
+function addLessons({ date, typeId, hours, note = '', price = 0 }, count = 1) {
   const n = Math.max(1, Math.floor(Number(count)) || 1)
   for (let i = 0; i < n; i++) {
-    lessons.value.push({ id: makeId(), date, typeId, hours: Number(hours), note })
+    lessons.value.push({
+      id: makeId(),
+      date,
+      typeId,
+      hours: Number(hours),
+      note,
+      price: Number(price) || 0,
+    })
   }
+}
+
+/** Ціна уроку: збережена в уроці, а для старих без ціни — поточна ціна типу. */
+function lessonPrice(lesson) {
+  if (lesson.price !== undefined && lesson.price !== null) return Number(lesson.price) || 0
+  return Number(getTypeById(lesson.typeId)?.price) || 0
 }
 
 function addLesson(data) {
@@ -74,6 +109,7 @@ export function useLessons() {
     addLesson,
     addLessons,
     removeLesson,
+    lessonPrice,
     sortedLessons,
     todayISO,
     replaceLessons,

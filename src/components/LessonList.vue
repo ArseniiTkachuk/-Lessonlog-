@@ -7,7 +7,7 @@ import { useLessons } from '../composables/useLessons.js'
 import { useLessonTypes } from '../composables/useLessonTypes.js'
 import { formatDuration } from '../utils/duration.js'
 
-const { sortedLessons } = useLessons()
+const { sortedLessons, lessonPrice } = useLessons()
 const { types } = useLessonTypes()
 
 // Фільтри: порожній рядок = «усі», тобто за замовчуванням нічого не відфільтровано
@@ -57,8 +57,6 @@ const filtered = computed(() =>
     )
 )
 
-const priceByType = computed(() => Object.fromEntries(types.value.map((t) => [t.id, Number(t.price) || 0])))
-
 /** Місяць → дні → уроки (порядок уже від нових до старих). */
 const groups = computed(() => {
   const months = []
@@ -77,7 +75,7 @@ const groups = computed(() => {
     day.lessons.push(lesson)
     m.count += 1
     m.hours += Number(lesson.hours) || 0
-    m.earnings += priceByType.value[lesson.typeId] || 0
+    m.earnings += lessonPrice(lesson)
   }
   return months
 })

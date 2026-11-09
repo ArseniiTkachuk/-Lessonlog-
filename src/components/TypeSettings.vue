@@ -5,7 +5,7 @@ import BaseButton from './BaseButton.vue'
 import DurationPicker from './DurationPicker.vue'
 import { useLessonTypes } from '../composables/useLessonTypes.js'
 
-const { types, addType, updateType, removeType } = useLessonTypes()
+const { types, defaultTypeId, addType, updateType, removeType, setDefaultType } = useLessonTypes()
 
 const newTypeName = ref('')
 
@@ -24,6 +24,13 @@ function submitNewType() {
       <li v-for="type in types" :key="type.id" class="type-settings__row">
         <div class="type-settings__top">
           <span class="type-settings__name">{{ type.name }}</span>
+          <button
+              class="type-settings__default"
+              :class="{ 'type-settings__default--active': defaultTypeId === type.id }"
+              @click="setDefaultType(type.id)"
+          >
+            {{ defaultTypeId === type.id ? '★ За замовчуванням' : '☆ Зробити основним' }}
+          </button>
           <button class="type-settings__remove" aria-label="Видалити тип" @click="removeType(type.id)">
             ✕
           </button>
@@ -136,6 +143,21 @@ function submitNewType() {
 .type-settings__unit {
   font-size: 0.85rem;
   color: var(--color-ink-soft);
+}
+
+.type-settings__default {
+  border: none;
+  background: transparent;
+  font-size: 0.82rem;
+  color: var(--color-ink-soft);
+  cursor: pointer;
+  margin-right: 0.5rem;
+}
+
+.type-settings__default--active {
+  color: var(--color-warm);
+  font-weight: 500;
+  cursor: default;
 }
 
 .type-settings__remove {

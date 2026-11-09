@@ -3,9 +3,12 @@ import { ref, computed } from 'vue'
 import BaseSelect from './BaseSelect.vue'
 import BaseButton from './BaseButton.vue'
 import LessonItem from './LessonItem.vue'
+import WeekPlanner from './WeekPlanner.vue'
 import { useLessons } from '../composables/useLessons.js'
 import { useLessonTypes } from '../composables/useLessonTypes.js'
 import { formatDuration } from '../utils/duration.js'
+
+defineEmits(['edit'])
 
 const { sortedLessons, lessonPrice } = useLessons()
 const { types } = useLessonTypes()
@@ -92,6 +95,8 @@ function toggle(key) {
 
 <template>
   <div class="lessons">
+    <WeekPlanner />
+
     <div v-if="sortedLessons().length" class="lessons__filters">
       <BaseSelect v-model="month" label="Місяць" :options="monthOptions" />
       <BaseSelect v-model="typeId" label="Тип" :options="typeOptions" />
@@ -116,7 +121,12 @@ function toggle(key) {
         <div v-for="day in m.days" :key="day.date" class="day">
           <div class="day__label">{{ day.label }}</div>
           <ul class="day__lessons">
-            <LessonItem v-for="lesson in day.lessons" :key="lesson.id" :lesson="lesson" />
+            <LessonItem
+                v-for="lesson in day.lessons"
+                :key="lesson.id"
+                :lesson="lesson"
+                @edit="$emit('edit', $event)"
+            />
           </ul>
         </div>
       </div>

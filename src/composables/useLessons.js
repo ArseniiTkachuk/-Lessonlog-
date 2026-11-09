@@ -58,7 +58,7 @@ function todayISO() {
 }
 
 /** Додає `count` однакових уроків (кожен — окремий запис зі своїм id). */
-function addLessons({ date, typeId, hours, note = '', price = 0 }, count = 1) {
+function addLessons({ date, typeId, hours, note = '', price = 0, scheduleKey }, count = 1) {
   const n = Math.max(1, Math.floor(Number(count)) || 1)
   for (let i = 0; i < n; i++) {
     lessons.value.push({
@@ -68,6 +68,7 @@ function addLessons({ date, typeId, hours, note = '', price = 0 }, count = 1) {
       hours: Number(hours),
       note,
       price: Number(price) || 0,
+      ...(scheduleKey ? { scheduleKey } : {}), // позначка «створено з розкладу»
     })
   }
 }
@@ -80,6 +81,11 @@ function lessonPrice(lesson) {
 
 function addLesson(data) {
   addLessons(data, 1)
+}
+
+function updateLesson(id, changes) {
+  const lesson = lessons.value.find((l) => l.id === id)
+  if (lesson) Object.assign(lesson, changes)
 }
 
 function removeLesson(id) {
@@ -108,6 +114,7 @@ export function useLessons() {
     lessons,
     addLesson,
     addLessons,
+    updateLesson,
     removeLesson,
     lessonPrice,
     sortedLessons,

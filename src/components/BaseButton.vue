@@ -34,11 +34,11 @@ defineProps({
 
 .base-button--primary {
   background: var(--color-accent);
-  color: white;
+  color: var(--color-on-accent);
 }
 
 .base-button--primary:hover {
-  background: #325f54;
+  background: var(--color-accent-hover);
 }
 
 .base-button--ghost {
@@ -58,6 +58,6 @@ defineProps({
 }
 
 .base-button--danger:hover {
-  background: #f6e9e5;
+  background: var(--color-danger-soft);
 }
 </style>

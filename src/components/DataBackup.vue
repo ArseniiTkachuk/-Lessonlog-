@@ -4,10 +4,12 @@ import BaseSelect from './BaseSelect.vue'
 import BaseButton from './BaseButton.vue'
 import { useLessons } from '../composables/useLessons.js'
 import { useLessonTypes } from '../composables/useLessonTypes.js'
+import { useSchedule } from '../composables/useSchedule.js'
 import { buildBackup, parseBackup, downloadText } from '../utils/backup.js'
 
 const { lessons, replaceLessons, mergeLessons, todayISO } = useLessons()
 const { types, replaceTypes, mergeTypes } = useLessonTypes()
+const { slots, replaceSlots, mergeSlots } = useSchedule()
 
 const mode = ref('merge')
 const modeOptions = [
@@ -25,7 +27,7 @@ function show(text, error = false) {
 }
 
 function exportData() {
-  downloadText(`lessonlog-${todayISO()}.json`, buildBackup(types.value, lessons.value))
+  downloadText(`lessonlog-${todayISO()}.json`, buildBackup(types.value, lessons.value, slots.value))
   show(`Експортовано: ${lessons.value.length} уроків, ${types.value.length} типів.`)
 }
 
@@ -41,10 +43,12 @@ async function onFileChosen(event) {
       if (!window.confirm('Усі поточні дані буде замінено даними з файлу. Продовжити?')) return
       replaceTypes(imported.types)
       replaceLessons(imported.lessons)
+      if (imported.schedule) replaceSlots(imported.schedule)
       show(`Імпортовано: ${imported.lessons.length} уроків, ${imported.types.length} типів.`)
     } else {
       mergeTypes(imported.types)
       const added = mergeLessons(imported.lessons)
+      if (imported.schedule) mergeSlots(imported.schedule)
       show(`Додано нових уроків: ${added} (з ${imported.lessons.length} у файлі).`)
     }
   } catch (e) {
@@ -57,7 +61,7 @@ async function onFileChosen(event) {
   <div class="backup">
     <h2>Резервна копія</h2>
     <p class="backup__hint">
-      Експорт зберігає всі уроки, типи, ціни й тривалості в текстовий файл (JSON).
+      Експорт зберігає всі уроки, типи, ціни, тривалості й розклад в текстовий файл (JSON).
     </p>
 
     <BaseButton @click="exportData">Експортувати</BaseButton>

@@ -1,9 +1,9 @@
 const APP_ID = 'lessonlog'
 const VERSION = 1
 
-export function buildBackup(types, lessons) {
+export function buildBackup(types, lessons, schedule = []) {
     return JSON.stringify(
-        { app: APP_ID, version: VERSION, exportedAt: new Date().toISOString(), types, lessons },
+        { app: APP_ID, version: VERSION, exportedAt: new Date().toISOString(), types, lessons, schedule },
         null,
         2
     )
@@ -40,9 +40,23 @@ export function parseBackup(text) {
             hours: Number(l.hours) || 0,
             note: l.note ? String(l.note) : '',
             ...(l.price !== undefined && l.price !== null ? { price: Number(l.price) || 0 } : {}),
+            ...(l.scheduleKey ? { scheduleKey: String(l.scheduleKey) } : {}),
         }))
 
-    return { types, lessons }
+    // У старих копіях розкладу немає: тоді schedule = null і поточний розклад не чіпаємо
+    const schedule = Array.isArray(data.schedule)
+        ? data.schedule
+            .filter((s) => s && s.id && s.typeId && Number(s.weekday) >= 1 && Number(s.weekday) <= 7)
+            .map((s) => ({
+                id: String(s.id),
+                weekday: Number(s.weekday),
+                typeId: String(s.typeId),
+                count: Math.min(10, Math.max(1, Math.floor(Number(s.count)) || 1)),
+                note: s.note ? String(s.note) : '',
+            }))
+        : null
+
+    return { types, lessons, schedule }
 }
 
 export function downloadText(filename, text) {

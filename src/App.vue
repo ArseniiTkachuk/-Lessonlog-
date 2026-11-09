@@ -5,10 +5,23 @@ import LessonList from './components/LessonList.vue'
 import LessonForm from './components/LessonForm.vue'
 import StatsPanel from './components/StatsPanel.vue'
 import TypeSettings from './components/TypeSettings.vue'
+import ScheduleSettings from './components/ScheduleSettings.vue'
+import ThemePicker from './components/ThemePicker.vue'
 import DataBackup from './components/DataBackup.vue'
 
 const activeTab = ref('lessons')
 const isFormOpen = ref(false)
+const editingLesson = ref(null) // null = новий урок
+
+function openNew() {
+  editingLesson.value = null
+  isFormOpen.value = true
+}
+
+function openEdit(lesson) {
+  editingLesson.value = lesson
+  isFormOpen.value = true
+}
 
 const tabs = [
   { value: 'lessons', label: 'Уроки' },
@@ -26,25 +39,31 @@ const tabs = [
     <AppTabs v-model="activeTab" :tabs="tabs" />
 
     <main class="app__content">
-      <LessonList v-if="activeTab === 'lessons'" />
+      <LessonList v-if="activeTab === 'lessons'" @edit="openEdit" />
       <StatsPanel v-else-if="activeTab === 'stats'" />
       <div v-else-if="activeTab === 'settings'" class="app__settings">
         <TypeSettings />
+        <ScheduleSettings />
+        <ThemePicker />
         <DataBackup />
       </div>
     </main>
 
     <Transition name="sheet">
       <div v-if="isFormOpen" class="app__overlay" @click.self="isFormOpen = false">
-        <LessonForm @close="isFormOpen = false" />
+        <LessonForm
+            :key="editingLesson?.id ?? 'new'"
+            :lesson="editingLesson"
+            @close="isFormOpen = false"
+        />
       </div>
     </Transition>
 
     <button
-      v-if="activeTab === 'lessons' && !isFormOpen"
-      class="app__fab"
-      aria-label="Додати урок"
-      @click="isFormOpen = true"
+        v-if="activeTab === 'lessons' && !isFormOpen"
+        class="app__fab"
+        aria-label="Додати урок"
+        @click="openNew"
     >
       +
     </button>
@@ -61,6 +80,12 @@ const tabs = [
   padding: 0.5rem 0 1.25rem;
 }
 
+.app__settings {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
 .app__content {
   margin-top: 1.25rem;
 }
@@ -74,7 +99,7 @@ const tabs = [
   border-radius: 50%;
   border: none;
   background: var(--color-accent);
-  color: white;
+  color: var(--color-on-accent);
   font-size: 1.8rem;
   line-height: 1;
   box-shadow: 0 6px 16px rgba(31, 42, 36, 0.25);
@@ -104,6 +129,4 @@ const tabs = [
 .sheet-leave-to {
   opacity: 0;
 }
-
-.app__settings { display: flex; flex-direction: column; gap: 2rem; }
 </style>

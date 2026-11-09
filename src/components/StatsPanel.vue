@@ -7,6 +7,8 @@ import ChartPanel from './ChartPanel.vue'
 import { useLessons } from '../composables/useLessons.js'
 import { useLessonTypes } from '../composables/useLessonTypes.js'
 import { formatDuration } from '../utils/duration.js'
+import { buildReport, REPORT_KINDS } from '../utils/reports.js'
+import { downloadText } from '../utils/backup.js'
 import {
   PERIOD_TABS,
   periodKey,
@@ -111,50 +113,28 @@ function deltaText(d, fmt) {
 const earningsDelta = computed(() => delta(current.value.earnings, previous.value.earnings))
 const hoursDelta = computed(() => delta(current.value.hours, previous.value.hours))
 
-// ---- Текстовий звіт ----
-const report = computed(() => {
-  const c = current.value
-  const lines = [
-    `Звіт: ${periodLabel(mode.value, selected.value)}`,
-    '',
-    `Уроків: ${c.count}`,
-    `Час: ${formatDuration(c.hours)}`,
-  ]
-  if (c.earnings > 0) {
-    lines.push(`Заробіток: ${formatMoney(c.earnings)}`, `Середній урок: ${formatMoney(c.avgLesson)}`)
-    if (c.hours > 0) lines.push(`За годину: ${formatMoney(c.perHour)}/год`)
-  }
-
-  const typeLines = statsByType.value
-      .filter((t) => t.count > 0)
-      .map(
-          (t) =>
-              `• ${t.name} — ${t.count} ур., ${formatDuration(t.hours)}` +
-              (t.earnings > 0 ? `, ${formatMoney(t.earnings)}` : '')
-      )
-  if (typeLines.length) lines.push('', 'За типами:', ...typeLines)
-
-  if (monthBreakdown.value.length) {
-    lines.push(
-        '',
-        'По місяцях:',
-        ...monthBreakdown.value.map(
-            (m) =>
-                `• ${m.label} — ${m.count} ур., ${formatDuration(m.hours)}` +
-                (m.earnings > 0 ? `, ${formatMoney(m.earnings)}` : '')
-        )
-    )
-  }
-
-  const cmp = []
-  if (earningsDelta.value) cmp.push(`заробіток ${deltaText(earningsDelta.value, formatMoney)}`)
-  if (hoursDelta.value) cmp.push(`час ${deltaText(hoursDelta.value, formatDuration)}`)
-  if (cmp.length) {
-    lines.push('', `Порівняно з періодом «${periodLabel(mode.value, prevKey.value)}»: ${cmp.join(', ')}`)
-  }
-
-  return lines.join('\n')
+// ---- Звіти ----
+const comparisonText = computed(() => {
+  const parts = []
+  if (earningsDelta.value) parts.push(`заробіток ${deltaText(earningsDelta.value, formatMoney)}`)
+  if (hoursDelta.value) parts.push(`час ${deltaText(hoursDelta.value, formatDuration)}`)
+  if (!parts.length) return ''
+  return `Порівняно з періодом «${periodLabel(mode.value, prevKey.value)}»: ${parts.join(', ')}`
 })
+
+const reportKind = ref('full')
+const reportMeta = computed(() => REPORT_KINDS.find((k) => k.value === reportKind.value))
+
+const reportText = computed(() =>
+    buildReport(reportKind.value, {
+      mode: mode.value,
+      label: periodLabel(mode.value, selected.value),
+      lessons: inPeriod(selected.value),
+      types: types.value,
+      price: lessonPrice,
+      comparison: comparisonText.value,
+    })
+)
 
 const copied = ref(false)
 
@@ -173,7 +153,7 @@ function fallbackCopy(text) {
 }
 
 async function copyReport() {
-  const text = report.value
+  const text = reportText.value
   try {
     await navigator.clipboard.writeText(text)
   } catch {
@@ -181,6 +161,14 @@ async function copyReport() {
   }
   copied.value = true
   setTimeout(() => (copied.value = false), 2000)
+}
+
+function downloadReport() {
+  downloadText(
+      `zvit-${reportKind.value}-${selected.value}.txt`,
+      reportText.value,
+      'text/plain;charset=utf-8'
+  )
 }
 </script>
 
@@ -267,9 +255,16 @@ async function copyReport() {
       </ul>
     </section>
 
-    <BaseButton variant="ghost" @click="copyReport">
-      {{ copied ? 'Скопійовано ✓' : 'Копіювати звіт' }}
-    </BaseButton>
+    <section class="report">
+      <h3>Звіт</h3>
+      <BaseSelect v-model="reportKind" label="Тип звіту" :options="REPORT_KINDS" />
+      <p class="report__desc">{{ reportMeta.description }}</p>
+      <pre class="report__preview">{{ reportText }}</pre>
+      <div class="report__actions">
+        <BaseButton @click="copyReport">{{ copied ? 'Скопійовано ✓' : 'Копіювати' }}</BaseButton>
+        <BaseButton variant="ghost" @click="downloadReport">Завантажити .txt</BaseButton>
+      </div>
+    </section>
 
     <ChartPanel />
   </div>
@@ -405,5 +400,43 @@ async function copyReport() {
 .breakdown__money {
   text-align: right;
   color: var(--color-ink);
+}
+
+.report {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.report h3 {
+  font-size: 1rem;
+}
+
+.report__desc {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-ink-soft);
+}
+
+.report__preview {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  max-height: 20rem;
+  overflow: auto;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.report__actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 </style>

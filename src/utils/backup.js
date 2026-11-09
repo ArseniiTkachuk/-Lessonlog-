@@ -59,8 +59,8 @@ export function parseBackup(text) {
     return { types, lessons, schedule }
 }
 
-export function downloadText(filename, text) {
-    const blob = new Blob([text], { type: 'application/json;charset=utf-8' })
+export function downloadText(filename, text, mime = 'application/json;charset=utf-8') {
+    const blob = new Blob([text], { type: mime })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url

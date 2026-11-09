@@ -5,25 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="657d4f0e-c072-41a5-afff-456c10ba0728" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/components/ScheduleSettings.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/ThemePicker.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/WeekPlanner.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/composables/useSchedule.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/composables/useTheme.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/period.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/reports.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/BaseButton.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/BaseButton.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/DataBackup.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataBackup.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/LessonForm.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/LessonForm.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/LessonItem.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/LessonItem.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/LessonList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/LessonList.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/StatsPanel.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/StatsPanel.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/composables/useLessons.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/composables/useLessons.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/utils/backup.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/backup.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/date.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/date.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -164,6 +149,7 @@
       <workItem from="1794155774996" duration="64000" />
       <workItem from="1794155876462" duration="5642000" />
       <workItem from="1794219059296" duration="3454000" />
+      <workItem from="1794247963557" duration="1301000" />
     </task>
     <servers />
   </component>
